@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luan.luanfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luan.luanfood.domain.model.Restaurante;
 import com.luan.luanfood.domain.repository.RestauranteRepository;
-import com.luan.luanfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luan.luanfood.domain.service.CadastroRestauranteService;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
@@ -74,7 +72,8 @@ public class RestauranteController {
                     .findById(restauranteId).orElse(null);
 
             if (restauranteAtual != null) {
-                BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+                BeanUtils.copyProperties(restaurante, restauranteAtual,
+                        "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 
                 restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
                 return ResponseEntity.ok(restauranteAtual);
