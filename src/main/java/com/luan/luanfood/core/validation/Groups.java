@@ -1,4 +1,4 @@
-package com.luan.luanfood;
+package com.luan.luanfood.core.validation;
 
 public interface Groups {
 
