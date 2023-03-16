@@ -3,22 +3,26 @@ package com.luan.luanfood.api.assembler;
 import com.luan.luanfood.api.model.input.RestauranteInput;
 import com.luan.luanfood.domain.model.Cozinha;
 import com.luan.luanfood.domain.model.Restaurante;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RestauranteInputDisassembler {
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     public Restaurante toDomainObject(RestauranteInput restauranteInput) {
-        Restaurante restaurante = new Restaurante();
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
+        return modelMapper.map(restauranteInput, Restaurante.class);
+    }
 
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
+    public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
+        // Para evitar org.hibernate.HibernateException: identifier of an instance of
+        // com.algaworks.algafood.domain.model.Cozinha was altered from 1 to 2
+        restaurante.setCozinha(new Cozinha());
 
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
+        modelMapper.map(restauranteInput, restaurante);
     }
 
 }

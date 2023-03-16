@@ -1,4 +1,5 @@
 package com.luan.luanfood.api.model;
+
 import java.math.BigDecimal;
 
 import lombok.Getter;
