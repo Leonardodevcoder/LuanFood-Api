@@ -1,18 +1,16 @@
 package com.luan.luanfood.domain.service;
 
-import com.luan.luanfood.domain.exception.CidadeNaoEncontradaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.luan.luanfood.domain.exception.CidadeNaoEncontradaException;
 import com.luan.luanfood.domain.exception.EntidadeEmUsoException;
-import com.luan.luanfood.domain.exception.EntidadeNaoEncontradaException;
 import com.luan.luanfood.domain.model.Cidade;
 import com.luan.luanfood.domain.model.Estado;
 import com.luan.luanfood.domain.repository.CidadeRepository;
-import com.luan.luanfood.domain.repository.EstadoRepository;
-
 
 @Service
 public class CadastroCidadeService {
@@ -26,6 +24,7 @@ public class CadastroCidadeService {
     @Autowired
     private CadastroEstadoService cadastroEstado;
 
+    @Transactional
     public Cidade salvar(Cidade cidade) {
         Long estadoId = cidade.getEstado().getId();
 
@@ -36,9 +35,11 @@ public class CadastroCidadeService {
         return cidadeRepository.save(cidade);
     }
 
+    @Transactional
     public void excluir(Long cidadeId) {
         try {
             cidadeRepository.deleteById(cidadeId);
+            cidadeRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
             throw new CidadeNaoEncontradaException(cidadeId);

@@ -1,13 +1,13 @@
 package com.luan.luanfood.domain.service;
 
-import com.luan.luanfood.domain.exception.EstadoNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.luan.luanfood.domain.exception.EntidadeEmUsoException;
-import com.luan.luanfood.domain.exception.EntidadeNaoEncontradaException;
+import com.luan.luanfood.domain.exception.EstadoNaoEncontradoException;
 import com.luan.luanfood.domain.model.Estado;
 import com.luan.luanfood.domain.repository.EstadoRepository;
 
@@ -20,13 +20,16 @@ public class CadastroEstadoService {
     @Autowired
     private EstadoRepository estadoRepository;
 
+    @Transactional
     public Estado salvar(Estado estado) {
         return estadoRepository.save(estado);
     }
 
+    @Transactional
     public void excluir(Long estadoId) {
         try {
             estadoRepository.deleteById(estadoId);
+            estadoRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
             throw new EstadoNaoEncontradoException(estadoId);
